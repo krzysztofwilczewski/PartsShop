@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head th:fragment="pagehead(title, remove)" th:remove="${remove}">
+  <meta http-equiv="content-type" content="text/html" charset="UTF-8">
+  <title>[[${title}]] - [[${SITE_NAME}]]</title>
+  <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/fonts/all.css}"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+  <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+  <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+  <script type="text/javascript" th:src="@{/js/js.js}"></script>
+</head>
+<body>
+
+<th th:fragment="column_table(moduleURL, fieldName, columnLabel)">
+  <a class="text-white"
+     th:href="@{'/admin' + ${moduleURL} + '/page/' + ${currentPage} + '?sortField=' +${fieldName}+ '&sortDir=' + ${sortField != fieldName ? sortDir : reverseSort} + ${keyword !=null ? '&keyword=' + keyword : '' }+ ${categoryId != null ? '&categoryId=' + categoryId : ''}}">
+    [[${columnLabel}]]
+  </a>
+  <span th:if="${sortField == fieldName}"
+        th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
+</th>
+
+<a th:fragment="page_link(moduleURL, pageNum, label)"
+   class="page-link"
+   th:href="@{'/admin' +${moduleURL} + '/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword=' + keyword : ''} + ${categoryId != null ? '&categoryId=' + categoryId : ''}}">[[${label}]]</a>
+
+
+<div th:fragment="adminheader">
+
+  <form th:action="@{/logout}" method="post" th:hidden="true" name="logoutForm">
+    <input type="submit"/>
+  </form>
+  <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+
+    <a class="navbar-brand" th:href="@{/}">
+      <img th:src="@{${SITE_LOGO}}"/>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#topNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="topNavbar">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/admin/customers}">KLIENCI</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/admin/users}">UŻYTKOWNICY</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/admin/products}">PRODUKTY</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/admin/categories}">KATEGORIE</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/admin/brands}">PRODUCENCI</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/admin/manufacturers}">AUTA</a>
+        </li>
+        <li class="nav-item dropdown" sec:authorize="hasAnyAuthority('Admin')">
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown" th:href="@{/admin/settings}">USTAWIENIA</a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" th:href="@{/admin/settings#general}">Ogólne</a>
+            <a class="dropdown-item" th:href="@{/admin/settings#countries}">Kraje</a>
+            <a class="dropdown-item" th:href="@{/admin/settings#states}">Stany</a>
+            <a class="dropdown-item" th:href="@{/admin/settings#mailServer}">E-Mail Server</a>
+            <a class="dropdown-item" th:href="@{/admin/settings#mailTemplate}">E-Mail szablon</a>
+            <a class="dropdown-item" th:href="@{/admin/settings#payments}">Płatności</a>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/admin/orders}">ZAMÓWIENIA</a>
+        </li>
+        <li>
+          <span class="fas fa-user fa-2x icon-grey"></span>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown"
+             th:href="@{/account}"
+             sec:authentication="principal.fullname"></a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" id="logoutLink" href="">Wyloguj</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+  </nav>
+
+
+</div>
+
+<div th:fragment="header">
+
+
+  <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+
+    <a class="navbar-brand" th:href="@{/}">
+      <img th:src="@{${SITE_LOGO}}"/>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#topNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="topNavbar">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/products}">PRODUKTY</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/cart}">KOSZYK</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/register}">REJESTRACJA</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/login}">LOGOWANIE</a>
+        </li>
+        <li class="nav-item" sec:authorize="hasAuthority('Admin')">
+          <a class="nav-link" th:href="@{/admin}">ADMIN</a>
+        </li>
+        <!--     <li>
+                 <span class="fas fa-user fa-2x icon-grey"></span>
+             </li>
+             <li class="nav-item dropdown">
+                 <a class="nav-link dropdown-toggle" data-toggle="dropdown"
+                    th:href="@{/account}"
+                    sec:authentication="principal.fullname"></a>
+                 <div class="dropdown-menu">
+                     <a class="dropdown-item" id="logoutLink" href="">Wyloguj</a>
+                 </div>
+             </li> -->
+      </ul>
+    </div>
+
+  </nav>
+
+</div>
+
+<div th:fragment="search" class="row">
+
+  <div class="col-md">
+
+    <th:block sec:authorize="isAuthenticated()">
+      <form th:action="@{/logout}" method="post" th:hidden="true" name="logoutForm">
+        <input type="submit" value="Logout" />
+      </form>
+    </th:block>
+
+    <nav class="navbar navbar-expand-sm bg-light">
+      <div class="collapse navbar-collapse" id="searchNavbar">
+        <form class="form-inline" th:action="@{/search}" method="get">
+          <input type="search" name="keyword" class="form-control mr-sm-2" th:value="${keyword}"
+                 placeholder="wyszukaj" required/>
+          <input type="submit" value="Szukaj" class="btn btn-outline-success"/>
+        </form>
+
+        <ul class="navbar-nav">
+          <th:block sec:authorize="isAuthenticated()">
+            <li class="nav-item">
+              <b><a class="nav-link" th:href="@{/customer}" sec:authentication="principal.fullName"></a></b>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="">Adresy</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="">Pytania</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="">Oceny</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="">Zamówienia</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="">Koszyk</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="javascript: document.logoutForm.submit()">Wyloguj</a>
+            </li>
+
+          </th:block>
+        </ul>
+
+      </div>
+    </nav>
+  </div>
+</div>
+
+<div th:fragment="footer">
+  <div>
+
+    <nav class="navbar navbar-expand bg-dark">
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="">O Nas</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="">Polityka prywatności</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="">Polityka zwrotów</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="">Kontakt</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <div class="text-center m-3">
+    <p>SKLEP ON-line &copy; Me</p>
+  </div>
+</div>
+
+<div th:fragment="modal" class="modal fade text-center" id="modalDialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="modalTitle">UWAGA</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <span id="modalBody"></span>
+      </div>
+      <div class="modal-footer"></div>
+      <button type="button" class="btn btn-danger" data-dismiss="modal">ZAMKNIJ</button>
+    </div>
+  </div>
+</div>
+
+
+<div th:fragment="modal_delete" class="modal fade text-center" id="confirmModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">USUNĄĆ ??!!</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <span id="confirmText"></span>
+      </div>
+      <div class="modal-footer"></div>
+      <a class="btn btn-success" href="" id="yesButton">TAK</a>
+      <button type="button" class="btn btn-danger" data-dismiss="modal">NIE</button>
+    </div>
+  </div>
+
+</div>
+
+<div th:fragment="pagination(moduleURL, entityName)" th:remove="tag">
+  <div class="text-center m-1" th:if="${totalItems>0}">
+    <span>[[${entityName}]] od [[${startCount}]] do [[${stopCount}]] z [[${totalItems}]]</span>
+  </div>
+
+  <div class="text-center m-1" th:unless="${totalItems>0}">
+    <span>Brak [[${entityName}]]</span>
+  </div>
+
+  <div th:if="${totalPages>1}">
+    <nav>
+      <ul class="pagination justify-content-center">
+        <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+          <a th:replace="fragments :: page_link(${moduleURL}, 1, 'Pierwsza')"></a>
+        </li>
+        <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+          <a th:replace="fragments :: page_link(${moduleURL}, ${currentPage - 1}, 'Poprzednia')"></a>
+        </li>
+        <li th:class="${currentPage != i ? 'page-item': 'page-item active'}"
+            th:each="i : ${#numbers.sequence(1,totalPages)}">
+          <a th:replace="fragments :: page_link(${moduleURL}, ${i}, ${i})"></a>
+        </li>
+        <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
+          <a th:replace="fragments :: page_link(${moduleURL}, ${currentPage + 1}, 'Następna')"></a>
+        </li>
+        <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
+          <a th:replace="fragments :: page_link(${moduleURL}, ${totalPages}, 'Ostatnia')"></a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
+
+<div th:fragment="search_module(moduleURL)">
+  <form th:action="@{${moduleURL}}" class="form-inline m-3">
+    <input type="hidden" name="sortField" th:value="${sortField}"/>
+    <input type="hidden" name="sortDir" th:value="${sortDir}"/>
+    Szukaj:&nbsp;
+    <input type="search" name="keyword" th:value="${keyword}" class="form-control" required/>
+    &nbsp;&nbsp;
+    <input type="submit" value="Szukaj" class="btn btn-primary"/>
+    &nbsp;&nbsp;
+    <input type="button" value="Wyczyść" class="btn btn-secondary" onclick="clearFilter()"/>
+  </form>
+</div>
+
+<script th:src="@{/js/js.js}"></script>
+</body>
+</html>

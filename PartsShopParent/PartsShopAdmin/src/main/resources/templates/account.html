@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: pagehead('Dane użytkownika', 'none')" />
+<body>
+
+<div class="container-fluid">
+  <div th:replace="fragments :: adminheader">
+
+  </div>
+  <div class="text-center">
+    <h1>Dane Użytkownika</h1>
+  </div>
+  <div th:if="${message != null}" class="alert alert-success text-center">
+    [[${message}]]
+  </div>
+  <form th:action="@{/account/update}" method="post" th:object="${user}" >
+    <input type="hidden" th:field="*{id}"/>
+    <div>
+      <div class="row">
+        <label class="col-sm-1">E-mail</label>
+        <div class="col-sm-8">
+          <input type="email" class="form-control" th:field="*{email}" readonly="readonly"/>
+        </div>
+      </div>
+      <div class="row">
+        <label class="col-sm-1">Imię</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" th:field="*{firstName}" required minlength="4"/>
+        </div>
+      </div>
+      <div class="row">
+        <label class="col-sm-1">Nazwisko</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" th:field="*{lastName}" required minlength="4"/>
+        </div>
+      </div>
+      <div class="row">
+        <label class="col-sm-1">Hasło</label>
+        <div class="col-sm-8">
+          <input type="password" th:field="*{password}" class="form-control" placeholder="Zostaw puste jeśli nie zmieniasz hasła"
+                 minlength="8" oninput="passwordMatch(document.getElementById('confirmpassword'))"/>
+        </div>
+      </div>
+
+      <div class="row">
+        <label class="col-sm-1">Potwierdź hasło</label>
+        <div class="col-sm-8">
+          <input type="password" id="confirmpassword" class="form-control" minlength="8" oninput="passwordMatch(this)"/>
+        </div>
+      </div>
+
+      <div class="row">
+        <label class="col-sm-1">Status</label>
+        <div class="col-sm-8">
+          <span><b>[[${user.roles}]]</b></span>
+        </div>
+      </div>
+
+
+      <div class="text-center">
+        <input type="submit" value="Zapisz" class="btn btn-primary"/>
+        <input type="button" value="Powrót" class="btn btn-primary" id="cancel"/>
+
+      </div>
+
+    </div>
+  </form>
+
+</div>
+<script type="text/javascript">
+  $(document).ready(function () {
+    $("#cancel").on("click", function () {
+      window.location = "[[@{/}]]";
+    })
+  });
+
+  function passwordMatch(confirmPassword){
+    if (confirmPassword.value != $("#password").val()){
+      confirmPassword.setCustomValidity("Hasła niezgodne!");
+    } else {
+      confirmPassword.setCustomValidity("");
+    }
+  }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: pagehead('ADMIN - LISTA UŻYTKOWNIKÓW', 'none')" />
+<body>
+
+<div class="container-fluid">
+  <div th:replace="fragments :: adminheader">
+
+  </div>
+  <div>
+    <h1>UŻYTKOWNICY</h1>
+    <a th:href="@{/admin/users/new}">NOWY UŻYTKOWNIK</a>
+  </div>
+  <div th:if="${message != null}" class="alert alert-success text-center">
+    [[${message}]]
+  </div>
+
+  <div th:replace="fragments :: search_module('/admin/users/page/1')" />
+
+  <div>
+    <table class="table table-bordered table-striped table-hover table-responsive-xl">
+      <thead class="thead-dark">
+      <tr>
+        <th th:replace="fragments :: column_table('/users', 'id', 'ID')"/>
+
+        <th th:replace="fragments :: column_table('/users', 'firstName', 'IMIĘ')"/>
+
+        <th th:replace="fragments :: column_table('/users', 'lastName', 'NAZWISKO')"/>
+
+        <th th:replace="fragments :: column_table('/users', 'email', 'E-MAIL')"/>
+        <!-- <th>HASŁO</th> -->
+        <th>STATUS</th>
+        <th th:replace="fragments :: column_table('/users', 'enabled', 'AKTYWNY')"/>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="user : ${users}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.firstName}"></td>
+        <td th:text="${user.lastName}"></td>
+        <td th:text="${user.email}"></td>
+        <!-- <td th:text="${user.password}"></td> -->
+        <td th:text="${user.roles}"></td>
+        <td>
+          <a th:if="${user.enabled == true}" class="fa-solid fa-user-check fa-2x icon-green" th:href="@{'/admin/users/' + ${user.id} + '/enabled/false'}" title="Aktywny"></a>
+          <a th:if="${user.enabled == false}" class="fa-solid fa-user-check fa-2x icon-grey" th:href="@{'/admin/users/' + ${user.id} + '/enabled/true'}" title="Nieaktywny"></a>
+        </td>
+        <td>
+          <a class="fa-solid fa-user-pen fa-2x icon-green" th:href="@{'/admin/users/edit/' + ${user.id}}"
+             title="Edycja użytkownika"></a>
+          &nbsp;
+          <a class="fa-solid fa-user-slash fa-2x icon-red link-delete"
+             th:href="@{'/admin/users/delete/' + ${user.id}}" th:userId="${user.id}"
+             title="Usuń użytkownika"></a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+  <div th:replace="fragments :: pagination('/users', 'Użytkownicy')" />
+
+  <div th:replace="fragments :: modal_delete" />
+
+</div>
+<script type="text/javascript">
+  $(document).ready(function () {
+    $(".link-delete").on("click", function (e) {
+      e.preventDefault();
+      link = $(this);
+      //alert($(this).attr("href"));
+      userId = link.attr("userId");
+      $("#yesButton").attr("href", link.attr("href"));
+      $("#confirmText").text("NAPEWNO CHCESZ USUNĄĆ UŻYTKOWNIKA ID " + userId + " ?");
+      $("#confirmModal").modal();
+    });
+  });
+
+  function clearFilter() {
+    window.location = "[[@{/admin/users}]]";
+  }
+</script>
+</body>
+</html>
