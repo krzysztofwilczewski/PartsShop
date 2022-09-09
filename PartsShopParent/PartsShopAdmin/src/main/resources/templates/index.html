@@ -1,10 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Admin</title>
-</head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head th:replace="fragments :: pagehead('ADMIN - PANEL', 'none')" />
 <body>
-<h1>WITAJ w NOWEJ WERSJI</h1>
+
+<div class="container-fluid">
+    <div th:replace="fragments :: adminheader">
+
+    </div>
+    <div>
+        <h1>HELLO ADMIN</h1>
+        <a th:href="@{/account}"
+           sec:authentication="principal.fullname"></a>
+        <span sec:authentication="principal.authorities"></span>
+    </div>
+
+</div>
 </body>
 </html>
