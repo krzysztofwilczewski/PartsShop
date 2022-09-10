@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: pagehead('ADMIN - LISTA KLIENTÓW', 'none')" />
+<body>
+
+<div class="container-fluid">
+    <div th:replace="fragments :: adminheader">
+
+    </div>
+    <div>
+        <h1>KLIENCI</h1>
+    </div>
+    <div th:if="${message != null}" class="alert alert-success text-center">
+        [[${message}]]
+    </div>
+
+    <div th:replace="fragments :: search_module('/admin/customers/page/1')" />
+
+    <div>
+        <table class="table table-bordered table-striped table-hover table-responsive-xl">
+            <thead class="thead-dark">
+            <tr>
+                <th th:replace="fragments :: column_table('/customers', 'id', 'ID')"/>
+
+                <th th:replace="fragments :: column_table('/customers', 'firstName', 'IMIĘ')"/>
+
+                <th th:replace="fragments :: column_table('/customers', 'lastName', 'NAZWISKO')"/>
+
+                <th th:replace="fragments :: column_table('/customers', 'email', 'E-MAIL')"/>
+
+                <th th:replace="fragments :: column_table('/customers', 'city', 'MIASTO')"/>
+
+                <th th:replace="fragments :: column_table('/customers', 'state', 'WOJEWÓDZTWO')"/>
+
+                <th th:replace="fragments :: column_table('/customers', 'country', 'KRAJ')"/>
+
+                <th th:replace="fragments :: column_table('/customers', 'enabled', 'AKTYWNY')"/>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="customer : ${listCustomers}">
+                <td th:text="${customer.id}"></td>
+                <td th:text="${customer.firstName}"></td>
+                <td th:text="${customer.lastName}"></td>
+                <td th:text="${customer.email}"></td>
+                <td th:text="${customer.city}"></td>
+                <td th:text="${customer.state}"></td>
+                <td>[[${customer.country.name}]]</td>
+                <td>
+                    <a th:if="${customer.enabled == true}" class="fa-solid fa-user-check fa-2x icon-green" th:href="@{'/admin/customers/' + ${customer.id} + '/enabled/false'}" title="Aktywny"></a>
+                    <a th:if="${customer.enabled == false}" class="fa-solid fa-user-check fa-2x icon-grey" th:href="@{'/admin/customers/' + ${customer.id} + '/enabled/true'}" title="Nieaktywny"></a>
+                </td>
+                <td>
+                    <a class="fas fa-file-alt fa-2x icon-green link-detail"
+                       th:href="@{'/admin/customers/detail/' + ${customer.id}}" title="Szczegóły klienta"></a>
+                    &nbsp;
+                    <a class="fa-solid fa-user-pen fa-2x icon-green" th:href="@{'/admin/customers/edit/' + ${customer.id}}"
+                       title="Edycja klienta"></a>
+                    &nbsp;
+                    <a class="fa-solid fa-user-slash fa-2x icon-red link-delete"
+                       th:href="@{'/admin/customers/delete/' + ${customer.id}}" th:customerId="${customer.id}"
+                       title="Usuń użytkownika"></a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <div th:replace="fragments :: pagination('/customers', 'Klienci')" />
+
+    <div th:replace="fragments :: modal_delete" />
+
+    <div class="modal fade" id="detailModal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+            </div>
+        </div>
+    </div>
+
+</div>
+<script th:src="@{/js.common.js}"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $(".link-delete").on("click", function (e) {
+            e.preventDefault();
+            link = $(this);
+            //alert($(this).attr("href"));
+            customerId = link.attr("customerId");
+            $("#yesButton").attr("href", link.attr("href"));
+            $("#confirmText").text("NAPEWNO CHCESZ USUNĄĆ KLIENTA ID " + customerId + " ?");
+            $("#confirmModal").modal();
+        });
+
+        $(".link-detail").on("click", function (e) {
+            e.preventDefault();
+            linkDetailURL = $(this).attr("href");
+            $("#detailModal").modal("show").find(".modal-content").load(linkDetailURL);
+        });
+    });
+
+    function clearFilter() {
+        window.location = "[[@{/admin/customers}]]";
+    }
+</script>
+</body>
+</html>
