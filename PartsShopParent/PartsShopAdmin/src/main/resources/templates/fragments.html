@@ -90,54 +90,9 @@
 
   </nav>
 
-
 </div>
 
-<div th:fragment="header">
 
-
-  <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
-
-    <a class="navbar-brand" th:href="@{/}">
-      <img th:src="@{${SITE_LOGO}}"/>
-    </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#topNavbar">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="topNavbar">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link" th:href="@{/products}">PRODUKTY</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" th:href="@{/cart}">KOSZYK</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" th:href="@{/register}">REJESTRACJA</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" th:href="@{/login}">LOGOWANIE</a>
-        </li>
-        <li class="nav-item" sec:authorize="hasAuthority('Admin')">
-          <a class="nav-link" th:href="@{/admin}">ADMIN</a>
-        </li>
-        <!--     <li>
-                 <span class="fas fa-user fa-2x icon-grey"></span>
-             </li>
-             <li class="nav-item dropdown">
-                 <a class="nav-link dropdown-toggle" data-toggle="dropdown"
-                    th:href="@{/account}"
-                    sec:authentication="principal.fullname"></a>
-                 <div class="dropdown-menu">
-                     <a class="dropdown-item" id="logoutLink" href="">Wyloguj</a>
-                 </div>
-             </li> -->
-      </ul>
-    </div>
-
-  </nav>
-
-</div>
 
 <div th:fragment="search" class="row">
 
@@ -195,32 +150,6 @@
   </div>
 </div>
 
-<div th:fragment="footer">
-  <div>
-
-    <nav class="navbar navbar-expand bg-dark">
-      <div class="collapse navbar-collapse">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link" href="">O Nas</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="">Polityka prywatności</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="">Polityka zwrotów</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="">Kontakt</a>
-          </li>
-        </ul>
-      </div>
-    </nav>
-  </div>
-  <div class="text-center m-3">
-    <p>SKLEP ON-line &copy; Me</p>
-  </div>
-</div>
 
 <div th:fragment="modal" class="modal fade text-center" id="modalDialog">
   <div class="modal-dialog">

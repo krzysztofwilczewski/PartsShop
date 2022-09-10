@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: pagehead('ADMIN - LISTA KATEGORII', 'none')" />
+<body>
+
+<div class="container-fluid">
+  <div th:replace="fragments :: adminheader">
+
+  </div>
+  <div>
+    <h1>KATEGORIE</h1>
+    <a th:href="@{/admin/categories/new}">NOWA KATEGORIA</a>
+  </div>
+  <div th:if="${message != null}" class="alert alert-success text-center">
+    [[${message}]]
+  </div>
+
+  <div th:replace="fragments :: search_module('/admin/categories/page/1')" />
+
+  <div>
+    <table class="table table-bordered table-striped table-hover table-responsive-xl">
+      <thead class="thead-dark">
+      <tr>
+        <th>ID</th>
+        <th>ZDJĘCIE</th>
+        <th th:replace="fragments :: column_table('/categories', 'name', 'NAZWA KATEGORII')"/>
+        <th>ALIAS</th>
+        <th>STATUS</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="category : ${listOfCategories}">
+        <td th:text="${category.id}"></td>
+        <td>
+          <img th:src="@{${category.imagePath}}" style="width: 100px" class="img-fluid"/>
+        </td>
+        <td th:text="${category.name}"></td>
+        <td th:text="${category.alias}"></td>
+
+        <td>
+          <a th:if="${category.enabled == true}" class="fa-solid fa-square-check fa-2x icon-green" th:href="@{'/admin/categories/' + ${category.id} + '/enabled/false'}" title="Aktywny"></a>
+          <a th:if="${category.enabled == false}" class="fa-solid fa-square-check fa-2x icon-grey" th:href="@{'/admin/categories/' + ${category.id} + '/enabled/true'}" title="Nieaktywny"></a>
+        </td>
+        <td>
+          <a class="fa-solid fa-pen-to-square fa-2x icon-green" th:href="@{'/admin/categories/edit/' + ${category.id}}"
+             title="Edycja kategorii"></a>
+          &nbsp;
+          <th:block th:if="${category.hasChildren == false}">
+            <a class="fa-solid fa-trash-can fa-2x icon-red link-delete"
+               th:href="@{'/admin/categories/delete/' + ${category.id}}" th:categoryId="${category.id}"
+               title="Usuń kategorię"></a>
+          </th:block>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div th:if="${keyword != null}" class="text-center">
+    <span>Wyszukane kategorie nie są wyświetlone w formie hierarchicznej</span>
+    <div th:replace="fragments :: pagination('/categories', 'Kategorie')" />
+  </div>
+
+  <th:block th:unless="${keyword != null}">
+    <div th:replace="fragments :: pagination('/categories', 'Główne kategorie')" />
+  </th:block>
+
+  <div th:replace="fragments :: modal_delete" />
+
+</div>
+<script th:src="@{/js.common.js}"></script>
+<script type="text/javascript">
+  $(document).ready(function () {
+    $(".link-delete").on("click", function (e) {
+      e.preventDefault();
+      link = $(this);
+      //alert($(this).attr("href"));
+      categoryId = link.attr("categoryId");
+      $("#yesButton").attr("href", link.attr("href"));
+      $("#confirmText").text("NAPEWNO CHCESZ USUNĄĆ KATEGORIĘ ID " + categoryId + " ?");
+      $("#confirmModal").modal();
+    });
+  });
+
+  function clearFilter() {
+    window.location = "[[@{/admin/categories}]]";
+  }
+</script>
+</body>
+</html>

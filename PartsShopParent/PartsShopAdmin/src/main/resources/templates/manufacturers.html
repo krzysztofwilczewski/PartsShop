@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: pagehead('ADMIN - LISTA AUT', 'none')" />
+<body>
+
+<div class="container-fluid">
+  <div th:replace="fragments :: adminheader">
+
+  </div>
+  <div>
+    <h1>PRODUCENCI AUT</h1>
+    <a th:href="@{/admin/manufacturers/new}">NOWE AUTO</a>
+  </div>
+  <div th:if="${message != null}" class="alert alert-success text-center">
+    [[${message}]]
+  </div>
+
+  <div th:replace="fragments :: search_module('/admin/manufacturers/page/1')" />
+
+  <div>
+    <table class="table table-bordered table-striped table-hover table-responsive-xl">
+      <thead class="thead-dark">
+      <tr>
+        <th>ID</th>
+        <th>ZDJĘCIE</th>
+        <th th:replace="fragments :: column_table('/manufacturers', 'name', 'NAZWA KATEGORII')"/>
+        <th>ALIAS</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="manufacturer : ${listOfManufacturers}">
+        <td th:text="${manufacturer.id}"></td>
+        <td>
+          <img th:src="@{${manufacturer.imagePath}}" style="width: 100px" class="img-fluid"/>
+        </td>
+        <td th:text="${manufacturer.name}"></td>
+        <td th:text="${manufacturer.alias}"></td>
+
+        <td>
+          <a class="fa-solid fa-pen-to-square fa-2x icon-green" th:href="@{'/admin/manufacturers/edit/' + ${manufacturer.id}}"
+             title="Edycja kategorii"></a>
+          &nbsp;
+          <th:block th:if="${manufacturer.hasChildren == false}">
+            <a class="fa-solid fa-trash-can fa-2x icon-red link-delete"
+               th:href="@{'/admin/manufacturers/delete/' + ${manufacturer.id}}" th:manufacturerId="${manufacturer.id}"
+               title="Usuń kategorię"></a>
+          </th:block>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div th:if="${keyword != null}" class="text-center">
+    <span>Wyszukane kategorie nie są wyświetlone w formie hierarchicznej</span>
+    <div th:replace="fragments :: pagination('/manufacturers', 'Kategorie')" />
+  </div>
+
+  <th:block th:unless="${keyword != null}">
+    <div th:replace="fragments :: pagination('/manufacturers', 'Główne kategorie')" />
+  </th:block>
+
+  <div th:replace="fragments :: modal_delete" />
+
+</div>
+<script th:src="@{/js.common.js}"></script>
+<script type="text/javascript">
+  $(document).ready(function () {
+    $(".link-delete").on("click", function (e) {
+      e.preventDefault();
+      link = $(this);
+      //alert($(this).attr("href"));
+      manufacturerId = link.attr("manufacturerId");
+      $("#yesButton").attr("href", link.attr("href"));
+      $("#confirmText").text("NAPEWNO CHCESZ USUNĄĆ AUTO ID " + manufacturerId + " ?");
+      $("#confirmModal").modal();
+    });
+  });
+
+  function clearFilter() {
+    window.location = "[[@{/admin/manufacturers}]]";
+  }
+</script>
+</body>
+</html>

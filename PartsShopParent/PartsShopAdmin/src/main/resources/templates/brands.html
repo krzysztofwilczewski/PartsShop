@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: pagehead('ADMIN - LISTA PRODUCENTÓW', 'none')" />
+<body>
+
+<div class="container-fluid">
+  <div th:replace="fragments :: adminheader">
+
+  </div>
+  <div>
+    <h1>PRODUCENCI CZĘŚCI</h1>
+    <a th:href="@{/admin/brands/new}">NOWY PRODUCENT</a>
+  </div>
+  <div th:if="${message != null}" class="alert alert-success text-center">
+    [[${message}]]
+  </div>
+
+  <div th:replace="fragments :: search_module('/admin/brands/page/1')" />
+
+  <div>
+    <table class="table table-bordered table-striped table-hover table-responsive-xl">
+      <thead class="thead-dark">
+      <tr>
+        <th>ID</th>
+        <th>ZDJĘCIE</th>
+        <th th:replace="fragments :: column_table('/brands', 'name', 'NAZWA PRODUCENTA')"/>
+        <th>KATEGORIE</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="brand : ${listBrands}">
+        <td th:text="${brand.id}"></td>
+        <td>
+          <img th:src="@{${brand.imagePath}}" style="width: 100px" class="img-fluid"/>
+        </td>
+        <td th:text="${brand.name}"></td>
+        <td>
+          <th:block th:each="cat: ${brand.categories}">
+            <span class="badge badge-secondary" th:text="${cat.name}"></span>
+          </th:block>
+        </td>
+
+        <td>
+          <a class="fa-solid fa-pen-to-square fa-2x icon-green" th:href="@{'/admin/brands/edit/' + ${brand.id}}"
+             title="Edycja producenta"></a>
+          &nbsp;
+          <a class="fa-solid fa-trash-can fa-2x icon-red link-delete"
+             th:href="@{'/admin/brands/delete/' + ${brand.id}}" th:brandId="${brand.id}"
+             title="Usuń producenta"></a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div th:replace="fragments :: pagination('/brands', 'Producenci')"/>
+
+  <div th:replace="fragments :: modal_delete" />
+
+</div>
+<script th:src="@{/js.common.js}"></script>
+<script type="text/javascript">
+  $(document).ready(function () {
+    $(".link-delete").on("click", function (e) {
+      e.preventDefault();
+      link = $(this);
+      //alert($(this).attr("href"));
+      brandId = link.attr("brandId");
+      $("#yesButton").attr("href", link.attr("href"));
+      $("#confirmText").text("NAPEWNO CHCESZ USUNĄĆ PRODUCENTA ID " + brandId + " ?");
+      $("#confirmModal").modal();
+    });
+  });
+
+  function clearFilter() {
+    window.location = "[[@{/admin/brands}]]";
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+</head>
+<body>
+
+<div th:fragment="content" id="divProductDetails">
+
+  <th:block th:each="detail, status : ${product.details}">
+    <div class="form-inline" th:id="'divDetail' + ${status.index}">
+      <input type="hidden" name="detailIDs" th:value="${detail.id}" />
+      <label class="m-3">Nazwa:</label>
+      <input type="text" class="form-control w-25" name="detailNames" th:value="${detail.name}" />
+      <label class="m-3">Wartość:</label>
+      <input type="text" class="form-control w-25" name="detailValues" th:value="${detail.value}" />
+      <a name="linkRemoveDetail" class="btn fas fa-times-circle fa-2x icon-grey" title="Usuń"></a>
+    </div>
+  </th:block>
+
+  <div class="form-inline" th:id="'divDetail' + ${#lists.size(product.details)}">
+    <input type="hidden" name="detailIDs" value="0" />
+    <label class="m-3">Nazwa:</label>
+    <input type="text" class="form-control w-25" name="detailNames" />
+    <label class="m-3">Wartość:</label>
+    <input type="text" class="form-control w-25" name="detailValues" />
+  </div>
+
+</div>
+</body>
+</html>

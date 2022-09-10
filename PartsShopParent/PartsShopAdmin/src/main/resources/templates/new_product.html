@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <head th:replace="fragments :: pagehead('ADMIN - EDYCJA/NOWY PRODUKT', 'tag')"/>
+  <link rel="stylesheet" th:href="@{/richtext/richtext.min.css}">
+  <script th:src="@{/richtext/jquery.richtext.js}"></script>
+</head>
+<body>
+
+<div class="container-fluid">
+  <div th:replace="fragments :: adminheader">
+
+  </div>
+  <div>
+    <h1>PRODUKT | [[${title}]]</h1>
+  </div>
+  <form th:action="@{/admin/products/save}" method="post" th:object="${product}" onsubmit="return checkUnique(this)" enctype="multipart/form-data">
+    <input type="hidden" th:field="*{id}"/>
+    <input th:if="${product.category != null}" type="hidden" id="categoryId" th:value="${product.category.id}" />
+
+    <div>
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" data-toggle="tab" href="#overview" role="tab">Ogólne</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#description" role="tab">Opis</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#image" role="tab">Zdjęcia</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#details" role="tab">Szczegóły</a>
+        </li>
+      </ul>
+
+      <!-- Tab panes -->
+      <div class="tab-content">
+        <div class="tab-pane active p-3" id="overview" role="tabpanel">
+          <div th:replace="product_overview :: content"></div>
+        </div>
+        <div class="tab-pane p-3" id="description" role="tabpanel">
+          <div th:replace="product_description :: content"></div>
+        </div>
+        <div class="tab-pane p-3" id="image" role="tabpanel">
+          <div th:replace="product_images :: content"></div>
+        </div>
+        <div class="tab-pane p-3" id="details" role="tabpanel">
+          <div th:replace="product_details :: content"></div>
+          <div>
+            <input type="button" class="btn btn-secondary" value="Dodaj kolejne szczegóły" onclick="addNextDetails()"/>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="text-center">
+      <input type="submit" value="Zapisz" class="btn btn-primary"/>
+      <input type="button" value="Powrót" class="btn btn-primary" id="cancel"/>
+    </div>
+  </form>
+
+  <div th:replace="fragments :: modal"></div>
+
+</div>
+<script type="text/javascript">
+
+  var extraImagesCount = 0;
+  moduleURL = "[[@{/admin/brands}]]";
+  dropdownBrands = $("#brand");
+  dropdownCategories = $("#category");
+
+  defaultImageThumbnailSrc ="[[@{/images/image-thumbnail.png}]]";
+
+  $(document).ready(function () {
+    $("#cancel").on("click", function () {
+      window.location = "[[@{/admin/products}]]";
+    });
+
+    $("#shortDescription").richText();
+    $("#fullDescription").richText();
+
+    dropdownManufacturers = $("#manufacturers");
+    divChosenManufacturers = $("#chosenManufacturers");
+
+    dropdownManufacturers.change(function () {
+      divChosenManufacturers.empty();
+      showChosenManufacturers();
+    });
+    showChosenManufacturers();
+  });
+
+  function showChosenManufacturers(){
+    dropdownManufacturers.children("option:selected").each(function () {
+      selectedManufacturer =$(this);
+      manId = selectedManufacturer.val();
+      manName = selectedManufacturer.text().replace(/-/g, "");
+
+      divChosenManufacturers.append("<span class='badge badge-secondary m-1'>"+ manName + "</span>");
+
+    });
+  }
+
+  dropdownBrands.change(function () {
+    dropdownCategories.empty();
+    getCategories();
+  });
+  getCategoriesFromNewForm();
+
+
+  function getCategoriesFromNewForm(){
+
+    catIdField = $("#categoryId");
+    editMode = false;
+
+    if (catIdField.length){
+      editMode = true;
+    }
+
+    if (!editMode) getCategories();
+  }
+
+  function getCategories() {
+    brandId = dropdownBrands.val();
+    url = moduleURL + "/" + brandId + "/categories";
+    $.get(url, function (responseJson) {
+      $.each(responseJson, function (index, category) {
+        $("<option>").val(category.id).text(category.name).appendTo(dropdownCategories);
+      });
+    });
+  }
+
+
+  function checkUnique(form) {
+    productId = $("#id").val();
+    productName = $("#name").val();
+
+    csrfValue = $("input[name='_csrf']").val();
+
+    url = "[[@{/admin/products/check_unique}]]"
+
+    params = {id: productId, name: productName, _csrf: csrfValue};
+
+    $.post(url, params, function (response) {
+      if (response == "OK") {
+        form.submit();
+      } else if (response == "Duplikacja"){
+        showWarningModal("Istnieje już przedmiot o nazwie " + productName);
+      } else {
+        showErrorModal("Nieznana odpowiedź z serwera");
+      }
+    }).fail(function () {
+      showErrorModal("Nie można połączyć się z serwerem");
+    });
+
+    return false;
+  }
+
+  function addNextDetails(){
+
+    allDivDetails = $("[id^='divDetail']");
+    divDetailsCount = allDivDetails.length;
+
+    htmlDetails=`
+        <div class="form-inline" id="divDetail${divDetailsCount}">
+        <input type="hidden" name="detailIDs" value="0" />
+        <label class="m-3">Nazwa:</label>
+        <input type="text" class="form-control w-25" name="detailNames" />
+        <label class="m-3">Wartość:</label>
+        <input type="text" class="form-control w-25" name="detailValues" />
+    </div>
+        `;
+
+    $("#divProductDetails").append(htmlDetails);
+
+    previousDivDetailSection = allDivDetails.last();
+    previousDivDetailId = previousDivDetailSection.attr("id");
+
+    htmlRemove = `
+        <a class="btn fas fa-times-circle fa-2x icon-grey" title="Usuń" href="javascript:removeDetailById('${previousDivDetailId}')" ></a>
+        `;
+
+
+    previousDivDetailSection.append(htmlRemove);
+
+    $("input[name='detailNames']").last().focus();
+  }
+
+  function removeDetailById(id){
+    $("#" + id).remove();
+  }
+
+
+</script>
+<script th:src="@{/js/file.js}"></script>
+<script th:src="@{/js/common.js}"></script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: pagehead('ADMIN - LISTA PRODUKTÓW', 'none')"/>
+<body>
+
+<div class="container-fluid">
+    <div th:replace="fragments :: adminheader">
+
+    </div>
+    <div>
+        <h1>PRODUKTY</h1>
+        <a th:href="@{/admin/products/new}">NOWY PRODUKT</a>
+    </div>
+    <div th:if="${message != null}" class="alert alert-success text-center">
+        [[${message}]]
+    </div>
+
+    <div>
+
+        <form th:action="@{/admin/products/page/1}" class="form-inline m-3"id="searchForm">
+            <input type="hidden" name="sortField" th:value="${sortField}"/>
+            <input type="hidden" name="sortDir" th:value="${sortDir}"/>
+
+            Kategorie:&nbsp;
+            <select class="form-control" name="categoryId" id="dropdownCategory">
+                <option value="0">Wszystkie kategorie</option>
+
+                <th:block th:each="cat : ${listCategories}">
+                    <option th:value="${cat.id}" th:selected="(${categoryId} == ${cat.id})">[[${cat.name}]]</option>
+                </th:block>
+            </select>
+
+            &nbsp;Szukaj:&nbsp;
+            <input type="search" name="keyword" th:value="${keyword}" class="form-control" required/>
+            &nbsp;&nbsp;
+            <input type="submit" value="Szukaj" class="btn btn-primary"/>
+            &nbsp;&nbsp;
+            <input type="button" value="Wyczyść" class="btn btn-secondary" onclick="clearFilter()"/>
+        </form>
+
+    </div>
+
+    <div>
+        <table class="table table-bordered table-striped table-hover table-responsive-xl">
+            <thead class="thead-dark">
+            <tr>
+                <th th:replace="fragments :: column_table('/products', 'id', 'ID')"/>
+                <th>ZDJĘCIE</th>
+                <th th:replace="fragments :: column_table('/products', 'name', 'NAZWA')"/>
+                <th th:replace="fragments :: column_table('/products', 'category', 'KATEGORIA')"/>
+                <th th:replace="fragments :: column_table('/products', 'brand', 'PRODUCENT')"/>
+                <th>AUTO</th>
+                <th>AKTYWNY</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="product : ${listProducts}">
+                <td th:text="${product.id}"></td>
+                <td>
+                    <img th:src="@{${product.mainImagePath}}" style="width: 120px" class="img-fluid"/>
+                </td>
+                <td>
+                    <a class="link-detail"
+                       th:href="@{'/admin/products/detail/' + ${product.id}}" th:title="${product.name}">[[${product.shortName}]]</a>
+                </td>
+                <td th:text="${product.category}"></td>
+                <td th:text="${product.brand.name}"></td>
+                <td>
+                    <th:block th:each="manu: ${product.manufacturers}">
+                        <span class="badge badge-secondary" th:text="${manu.name}"></span>
+                    </th:block>
+                </td>
+                <td>
+                    <a th:if="${product.enabled == true}" class="fa-solid fa-square-check fa-2x icon-green"
+                       th:href="@{'/admin/products/' + ${product.id} + '/enabled/false'}" title="Aktywny"></a>
+                    <a th:if="${product.enabled == false}" class="fa-solid fa-square-check fa-2x icon-grey"
+                       th:href="@{'/admin/products/' + ${product.id} + '/enabled/true'}" title="Nieaktywny"></a>
+                </td>
+
+                <td>
+                    <a class="fas fa-file-alt fa-2x icon-green link-detail"
+                       th:href="@{'/admin/products/detail/' + ${product.id}}" title="Szczegóły produktu"></a>
+                    <a class="fa-solid fa-pen-to-square fa-2x icon-green"
+                       th:href="@{'/admin/products/edit/' + ${product.id}}"
+                       title="Edycja produktu"></a>
+                    &nbsp;
+                    <a class="fa-solid fa-trash-can fa-2x icon-red link-delete"
+                       th:href="@{'/admin/products/delete/' + ${product.id}}" th:productId="${product.id}"
+                       title="Usuń produkt"></a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:replace="fragments :: pagination('/products', 'Produktów')"/>
+
+    <div th:replace="fragments :: modal_delete"/>
+
+    <div class="modal fade" id="detailModal">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+
+            </div>
+        </div>
+    </div>
+
+</div>
+<script th:src="@{/js.common.js}"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".link-delete").on("click", function (e) {
+            e.preventDefault();
+            link = $(this);
+            //alert($(this).attr("href"));
+            productId = link.attr("productId");
+            $("#yesButton").attr("href", link.attr("href"));
+            $("#confirmText").text("NAPEWNO CHCESZ USUNĄĆ PRODUKT ID " + productId + " ?");
+            $("#confirmModal").modal();
+        });
+
+        $(".link-detail").on("click", function (e) {
+            e.preventDefault();
+            linkDetailURL = $(this).attr("href");
+            $("#detailModal").modal("show").find(".modal-content").load(linkDetailURL);
+        });
+
+        $("#dropdownCategory").on("change", function (){
+            $("#searchForm").submit();
+        });
+
+    });
+
+    function clearFilter() {
+        window.location = "[[@{/admin/products}]]";
+    }
+</script>
+</body>
+</html>
