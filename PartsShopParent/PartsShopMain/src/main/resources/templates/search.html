@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head th:replace="fragments :: pagehead(${pageTitle}, 'none')"/>
+
+<body>
+
+<div class="container-fluid">
+  <div th:replace="fragments :: header"></div>
+  <div th:replace="fragments :: search"></div>
+
+  <div th:if="${totalItems > 0}">
+    <h2>Wyniki wyszukiwania dla '[[${keyword}]]'</h2>
+  </div>
+  <div th:unless="${totalItems > 0}">
+    <h2>Brak wyników dla '[[${keyword}]]'</h2>
+  </div>
+
+  <div class="row">
+    <th:block th:each="product : ${listResult}">
+      <div th:replace="product_fragment :: content"></div>
+    </th:block>
+  </div>
+
+  <div th:replace="fragments_front :: pagination('/search', 'Produktów')"></div>
+
+  <div th:replace="fragments :: footer"></div>
+
+</div>
+</body>
+</html>

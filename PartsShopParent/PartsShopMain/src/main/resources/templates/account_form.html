@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head th:replace="fragments :: pagehead('Dane Użytkownika', 'none')"/>
+
+<body>
+
+<div class="container-fluid">
+  <div th:replace="fragments :: header"></div>
+
+  <div>&nbsp;</div>
+
+  <div class="text-center">
+    <h2>Twoje dane</h2>
+  </div>
+
+  <div>&nbsp;</div>
+
+  <form th:action="@{/update_account_details}" method="post" th:object="${customer}" style="max-width: 600px; margin: 0 auto">
+
+    <input type="hidden" th:field="*{id}" />
+
+    <div th:if="${message != null}" class="alert alert-success text-center">
+      [[${message}]]
+    </div>
+
+    <div class="border border-secondary rounded p-3">
+
+      <div class="form-group row">
+        <label class="col-sm-4 col-form-label">E-mail:</label>
+        <div class="col-sm-8">
+          <input type="text" th:field="*{email}" class="form-control" readonly="readonly"/>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-sm-4 col-form-label">Imię:</label>
+        <div class="col-sm-8">
+          <input type="text" th:field="*{firstName}" class="form-control" required="required" minlength="2"/>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-sm-4 col-form-label">Nazwisko:</label>
+        <div class="col-sm-8">
+          <input type="text" th:field="*{lastName}" class="form-control" required="required" minlength="2"/>
+        </div>
+      </div>
+
+      <th:block th:if="${customer.authenticationType.name() == 'DATABASE'}">
+
+      <div class="form-group row">
+        <label class="col-sm-4 col-form-label">Hasło:</label>
+        <div class="col-sm-8">
+          <input type="password" th:field="*{password}" class="form-control" minlength="6"
+                 oninput="checkPasswordMatch(document.getElementById('confirmPassword'))"
+          />
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-sm-4 col-form-label">Powtórz hasło:</label>
+        <div class="col-sm-8">
+          <input type="password" id="confirmPassword" class="form-control" minlength="6"
+                 oninput="checkPasswordMatch(this)"
+          />
+        </div>
+      </div>
+
+      </th:block>
+
+      <div class="form-group row">
+        <label class="col-sm-4 col-form-label">Numer telefonu:</label>
+        <div class="col-sm-8">
+          <input type="text" th:field="*{phoneNumber}" class="form-control" required="required"
+                 minlength="9"/>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-sm-4 col-form-label">Adres 1:</label>
+        <div class="col-sm-8">
+          <input type="text" th:field="*{addressLine1}" class="form-control" required="required"
+                 minlength="2"/>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-sm-4 col-form-label">Adres 2:</label>
+        <div class="col-sm-8">
+          <input type="text" th:field="*{addressLine2}" class="form-control" minlength="2"/>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-sm-4 col-form-label">Miasto:</label>
+        <div class="col-sm-8">
+          <input type="text" th:field="*{city}" class="form-control" minlength="2"/>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-sm-4 col-form-label">Kraj:</label>
+        <div class="col-sm-8">
+          <select class="form-control" th:field="*{country}">
+            <th:block th:each="country : ${listCountries}">
+              <option th:value="${country.id}">[[${country.name}]]</option>
+            </th:block>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-sm-4 col-form-label">Województwo:</label>
+        <div class="col-sm-8">
+          <input type="text" th:field="*{state}" class="form-control" minlength="2" list="listStates"/>
+          <datalist id="listStates"></datalist>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-sm-4 col-form-label">Kod pocztowy:</label>
+        <div class="col-sm-8">
+          <input type="text" th:field="*{postalCode}" class="form-control" minlength="2"/>
+        </div>
+      </div>
+
+
+      <div class="text-center">
+        <input type="submit" value="Zapisz zmiany" class="btn btn-primary"/>
+      </div>
+
+    </div>
+  </form>
+
+  <div>&nbsp;</div>
+
+  <div th:replace="fragments :: modal"></div>
+  <div th:replace="fragments :: footer"></div>
+
+</div>
+<script type="text/javascript">
+  contextPath="[[@{/}]]"
+</script>
+<script type="text/javascript" th:src="@{/js/customer.js}"></script>
+</body>
+</html>

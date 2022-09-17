@@ -23,10 +23,4 @@ public interface CategoryService {
 
     public void delete(Integer id) throws CategoryNotFoundException;
 
- //   public List<Category> listNoChildrenCategories();
-
- //   public Category getCategory(String alias) throws CategoryNotFoundException;
-
- //   public List<Category> getCategoryParents(Category child);
-
 }

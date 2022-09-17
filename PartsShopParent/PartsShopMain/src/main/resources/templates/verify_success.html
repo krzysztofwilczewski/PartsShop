@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head th:replace="fragments :: pagehead('Weryfikacja udana!', 'none')"/>
+
+<body>
+
+<div class="container-fluid">
+    <div th:replace="fragments :: header"></div>
+
+    <div>&nbsp;</div>
+
+    <div class="text-center">
+        <h2>Weryfikacja Użytkownika</h2>
+        <h4>Gratulacje! Twoje konto zostało zweryfikowane.</h4>
+        <p><a th:href="@{/login}">Zaloguj się</a></p>
+    </div>
+
+    <div>&nbsp;</div>
+
+    <div th:replace="fragments :: footer">
+
+    </div>
+
+</div>
+</body>
+</html>

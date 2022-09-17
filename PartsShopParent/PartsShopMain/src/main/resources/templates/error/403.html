@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head th:replace="fragments :: pagehead('BŁĄD', 'none')" />
+
+<body>
+
+<div class="container-fluid">
+  <div th:replace="fragments :: header"></div>
+  <div class="m-3">
+    <h2>Przepraszamy, nie posiadasz uprawnień do tej strony</h2>
+  </div>
+
+</div>
+</body>
+</html>

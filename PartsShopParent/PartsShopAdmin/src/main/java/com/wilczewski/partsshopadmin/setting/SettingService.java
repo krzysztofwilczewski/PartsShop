@@ -12,14 +12,11 @@ public interface SettingService {
 
     public void saveAll(Iterable<Setting> settings);
 
-   // public List<Setting> getListGeneralSettings();
-
     public List<Setting> getMailServerSettings();
 
     public List<Setting> getMailTemplatesSettings();
 
-    public List<Setting> getCurrencySettings();
+  //  public List<Setting> getCurrencySettings();
 
-  //  public EmailSettingBag getEmailSettings();
 
 }

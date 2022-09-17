@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head th:replace="fragments :: pagehead('Weryfikacja nieudana!', 'none')"/>
+
+<body>
+
+<div class="container-fluid">
+  <div th:replace="fragments :: header"></div>
+
+  <div>&nbsp;</div>
+
+  <div class="text-center">
+    <h2>Weryfikacja Użytkownika</h2>
+    <h4>Twoje konto zostało zweryfikowane lub kod weryfikacyjny jest nieprawidłowy.</h4>
+  </div>
+
+  <div>&nbsp;</div>
+
+  <div th:replace="fragments :: footer">
+
+  </div>
+
+</div>
+</body>
+</html>

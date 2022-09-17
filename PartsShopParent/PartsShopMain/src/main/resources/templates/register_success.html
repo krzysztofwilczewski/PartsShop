@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head th:replace="fragments :: pagehead(${pageTitle}, 'none')"/>
+
+<body>
+
+<div class="container-fluid">
+  <div th:replace="fragments :: header"></div>
+
+  <div>&nbsp;</div>
+
+  <div class="text-center">
+    <h2>Rejestracja Użytkownika</h2>
+    <h4>Nastąpiła udana rejestracja nowego użytkownika.</h4>
+    <p>Proszę sparwdzić pocztę e-mail aby zweryfikować konto</p>
+    <p><a th:href="@{/login}">Zaloguj się</a></p>
+  </div>
+
+  <div>&nbsp;</div>
+
+  <div th:replace="fragments :: footer">
+
+  </div>
+
+</div>
+</body>
+</html>

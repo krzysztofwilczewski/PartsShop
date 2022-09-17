@@ -24,10 +24,6 @@ public interface ProductService {
 
     public void saveProductPrice(Product productInForm);
 
-  //  public Page<Product> listByCategory(int pageNumber, Integer categoryId);
 
-  //  public Product getProduct(String alias) throws ProductNotFoundException;
-
- //   public Page<Product> search(String keyword, int pageNumber);
 
 }

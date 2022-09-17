@@ -11,12 +11,6 @@ public interface CustomerService {
 
     public List<Country> listAllCountries();
 
- //   public boolean isEmailUnique(String email);
-
-  //  public void registerCustomer(Customer customer);
-
-  //  public boolean verify(String verificationCode);
-
     public Page<Customer> listByPage(int pageNumber, String sortField, String sortDir, String keyword);
 
     public void updateCustomerEnabledStatus(Integer id, boolean enabled);

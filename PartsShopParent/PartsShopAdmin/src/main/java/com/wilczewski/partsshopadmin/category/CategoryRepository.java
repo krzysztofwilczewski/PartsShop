@@ -31,10 +31,4 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
 
     public Long countById(Integer id);
 
-   // @Query("SELECT c FROM Category c WHERE c.enabled = true ORDER BY c.name ASC ")
-   // public List<Category> findAllEnabled();
-
-   // @Query("SELECT c FROM Category c WHERE c.enabled = true and c.alias = ?1")
-   // public Category findByAliasEnabled(String alias);
-
 }

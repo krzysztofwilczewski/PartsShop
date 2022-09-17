@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head th:fragment="pagehead(title, remove)" th:remove="${remove}">
+  <meta http-equiv="content-type" content="text/html" charset="UTF-8">
+  <title>[[${title}]]</title>
+  <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/fonts/all.css}"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+  <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+  <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+  <script type="text/javascript" th:src="@{/js/js.js}"></script>
+</head>
+<body>
+
+
+
+<a th:fragment="page_link(moduleURL, pageNum, label)"
+   class="page-link"
+   th:href="@{'/admin' +${moduleURL} + '/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword=' + keyword : ''}}">[[${label}]]</a>
+
+
+<div th:fragment="pagination(moduleURL, entityName)" th:remove="tag">
+  <div class="text-center m-1" th:if="${totalItems>0}">
+    <span>[[${entityName}]] od [[${startCount}]] do [[${stopCount}]] z [[${totalItems}]]</span>
+  </div>
+
+  <div class="text-center m-1" th:unless="${totalItems>0}">
+    <span>Brak [[${entityName}]]</span>
+  </div>
+
+  <div th:if="${totalPages>1}">
+    <nav>
+      <ul class="pagination justify-content-center">
+        <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+          <a th:replace="fragments :: page_link(${moduleURL}, 1, 'Pierwsza')"></a>
+        </li>
+        <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+          <a th:replace="fragments :: page_link(${moduleURL}, ${currentPage - 1}, 'Poprzednia')"></a>
+        </li>
+        <li th:class="${currentPage != i ? 'page-item': 'page-item active'}" th:each="i : ${#numbers.sequence(1,totalPages)}">
+          <a th:replace="fragments :: page_link(${moduleURL}, ${i}, ${i})"></a>
+        </li>
+        <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
+          <a th:replace="fragments :: page_link(${moduleURL}, ${currentPage + 1}, 'Następna')"></a>
+        </li>
+        <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
+          <a th:replace="fragments :: page_link(${moduleURL}, ${totalPages}, 'Ostatnia')"></a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
+
+<div th:fragment="search_module(moduleURL)">
+  <form th:action="@{${moduleURL}}" class="form-inline m-3">
+    <input type="hidden" name="sortField" th:value="${sortField}"/>
+    <input type="hidden" name="sortDir" th:value="${sortDir}"/>
+    Szukaj:&nbsp;
+    <input type="search" name="keyword" th:value="${keyword}" class="form-control" required/>
+    &nbsp;&nbsp;
+    <input type="submit" value="Szukaj" class="btn btn-primary"/>
+    &nbsp;&nbsp;
+    <input type="button" value="Wyczyść" class="btn btn-secondary" onclick="clearFilter()"/>
+  </form>
+</div>
+
+<script th:src="@{/js/js.js}"></script>
+</body>
+</html>
