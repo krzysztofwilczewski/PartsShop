@@ -64,6 +64,10 @@ public class Customer {
     public Customer() {
     }
 
+    public Customer(Integer id) {
+        this.id = id;
+    }
+
     public Customer(Integer id, String email, String password, String firstName, String lastName, String phoneNumber, String addressLine1, String addressLine2, String city, String state, String postalCode, String verificationCode, boolean enabled, Date createdTime, Country country) {
         this.id = id;
         this.email = email;

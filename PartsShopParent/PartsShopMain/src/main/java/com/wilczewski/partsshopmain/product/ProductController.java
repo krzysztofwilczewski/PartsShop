@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -85,12 +86,12 @@ public class ProductController {
     }
 
     @GetMapping("/search")
-    public String searchFirstPage(@Param("keyword") String keyword, Model model){
+    public String searchFirstPage(String keyword, Model model){
         return searchByPage(keyword, 1, model);
     }
 
     @GetMapping("/search/page/{pageNumber}")
-    public String searchByPage(@Param("keyword") String keyword, @PathVariable("pageNumber") int pageNumber, Model model){
+    public String searchByPage(String keyword, @PathVariable("pageNumber") int pageNumber, Model model){
 
         Page<Product> pageProducts = productService.search(keyword, pageNumber);
         List<Product> listResult = pageProducts.getContent();

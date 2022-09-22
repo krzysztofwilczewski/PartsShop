@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.mail.MessagingException;
@@ -92,7 +93,7 @@ public class CustomerController {
     }
 
     @GetMapping("/verify")
-    public String verifyAccount(@Param("code") String code, Model model){
+    public String verifyAccount(String code, Model model){
         boolean verified = customerService.verify(code);
 
         return (verified ? "verify_success" : "verify_fail");
@@ -101,7 +102,7 @@ public class CustomerController {
     @GetMapping("/account_details")
     public String viewAccountDetails(Model model, HttpServletRequest request){
 
-        String email = getEmailOfAuthenticatedCustomer(request);
+        String email = Utility.getEmailOfAuthenticatedCustomer(request);
         Customer customer = customerService.getCustomerByEmail(email);
 
         List<Country> listCountries = customerService.listAllCountries();
@@ -110,21 +111,6 @@ public class CustomerController {
         model.addAttribute("listCountries", listCountries);
 
         return "account_form";
-    }
-
-    private String getEmailOfAuthenticatedCustomer(HttpServletRequest request){
-        Object principal = request.getUserPrincipal();
-        String customerEmail = null;
-
-        if (principal instanceof UsernamePasswordAuthenticationToken || principal instanceof RememberMeAuthenticationToken) {
-            customerEmail = request.getUserPrincipal().getName();
-        } else if (principal instanceof OAuth2AuthenticationToken) {
-            OAuth2AuthenticationToken oauth2Token = (OAuth2AuthenticationToken) principal;
-            CustomerOAuth2User oauth2User = (CustomerOAuth2User) oauth2Token.getPrincipal();
-            customerEmail = oauth2User.getEmail();
-        }
-
-        return customerEmail;
     }
 
     @PostMapping("/update_account_details")
@@ -140,8 +126,6 @@ public class CustomerController {
     private void updateNameForAuthenticatedCustomer(Customer customer, HttpServletRequest request) {
 
         Object principal = request.getUserPrincipal();
-
-
 
         if (principal instanceof UsernamePasswordAuthenticationToken || principal instanceof RememberMeAuthenticationToken) {
 

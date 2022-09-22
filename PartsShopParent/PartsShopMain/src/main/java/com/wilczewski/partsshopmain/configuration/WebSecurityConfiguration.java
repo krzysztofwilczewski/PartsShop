@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,7 +34,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/account_details", "/update_account_details").authenticated()
+                .antMatchers("/account_details", "/update_account_details", "/cart").authenticated()
                 .anyRequest().permitAll()
                 .and()
                 .formLogin()
@@ -51,7 +52,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and().successHandler(oAuth2LoginSuccessHandler)
                 .and()
                 .logout().permitAll()
-                .and().rememberMe().key("1234567890_AbcDeFgHiJkLmNoPqRsTuVwXyZ");
+                .and().rememberMe().key("1234567890_AbcDeFgHiJkLmNoPqRsTuVwXyZ")
+                .and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS);
     }
 
     @Override

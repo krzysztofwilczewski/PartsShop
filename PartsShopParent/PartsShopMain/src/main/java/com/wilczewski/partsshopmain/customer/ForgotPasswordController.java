@@ -84,7 +84,7 @@ public class ForgotPasswordController {
     }
 
     @GetMapping("/reset_password")
-    public String showResetForm(@Param("token") String token, Model model){
+    public String showResetForm(String token, Model model){
 
         Customer customer = customerService.getByResetPasswordToken(token);
 

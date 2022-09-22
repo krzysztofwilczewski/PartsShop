@@ -49,8 +49,8 @@ public class ProductController {
     }
 
     @GetMapping("/products/page/{pageNumber}")
-    public String listByPage(@PathVariable(name = "pageNumber") int pageNumber, Model model, @Param("sortField") String sortField,
-                             @Param("sortDir") String sortDir, @Param("keyword") String keyword, @Param("categoryId") Integer categoryId){
+    public String listByPage(@PathVariable(name = "pageNumber") int pageNumber, Model model, String sortField,
+                              String sortDir, String keyword, Integer categoryId){
 
         Page<Product> page = productService.listByPage(pageNumber, sortField, sortDir, keyword, categoryId);
         List<Product> listProducts = page.getContent();

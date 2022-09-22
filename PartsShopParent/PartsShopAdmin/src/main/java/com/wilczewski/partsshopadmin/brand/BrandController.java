@@ -36,8 +36,8 @@ public class BrandController {
     }
 
     @GetMapping("/brands/page/{pageNumber}")
-    public String listByPage(@PathVariable(name = "pageNumber") int pageNumber, Model model, @Param("sortField") String sortField,
-                             @Param("sortDir") String sortDir, @Param("keyword") String keyword){
+    public String listByPage(@PathVariable(name = "pageNumber") int pageNumber, Model model, String sortField,
+                              String sortDir,  String keyword){
 
         Page<Brand> page = brandService.listByPage(pageNumber, sortField, sortDir, keyword);
         List<Brand> listBrands = page.getContent();

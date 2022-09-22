@@ -3,6 +3,7 @@ package com.wilczewski.partsshopadmin.customer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -16,7 +17,7 @@ public class CustomerRestController {
     }
 
     @PostMapping("/admin/customers/check_email")
-    public String checkDuplicateEmail(@Param("id") Integer id, @Param("email") String email) {
+    public String checkDuplicateEmail(Integer id, String email) {
         if (customerService.checkIsEmailUnique(id, email)) {
             return "OK";
         } else {
