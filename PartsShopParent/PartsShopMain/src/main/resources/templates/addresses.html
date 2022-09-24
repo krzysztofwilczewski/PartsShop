@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head th:replace="fragments :: pagehead('Książka adresowa', 'none')"/>
+
+<body>
+
+<div class="container-fluid">
+    <div th:replace="fragments :: header"></div>
+    <div th:replace="fragments :: search"></div>
+
+    <div class="text-center">
+    <div>
+        <h2>TWOJA KSIĄŻKA ADRESOWA</h2>
+    </div>
+        <div>
+            <a th:href="@{/address_book/new}" class="h4">Dodaj nowy adres</a>
+        </div>
+    </div>
+
+    <div th:if="${message != null}" class="alert alert-success text-center m-1">
+        [[${message}]]
+    </div>
+
+    <div class="row m-1">
+        <div class="col-sm-6 mt-2">
+            <div class="card" th:classappend="${usePrimaryAddressAsDefault ? 'bg-warning' : ''}">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col">
+                            <b>Twój główny adres</b>
+
+                            <th:block th:if="${usePrimaryAddressAsDefault}">
+                                <span class="text-danger">[Główny]</span>
+                            </th:block>
+
+                            <th:block th:unless="${usePrimaryAddressAsDefault}">
+                                <a th:href="@{'/address_book/default/0'}">[Ustaw jako główny]</a>
+                            </th:block>
+
+                        </div>
+                        <div class="col">
+                            <div class="float-right">
+                                <a class="fas fa-edit icon-grey" title="Edytuj główny adres" th:href="@{/account_details(redirect=address_book)}"></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    [[${customer.address}]]
+                </div>
+            </div>
+        </div>
+
+        <th:block th:each="address, status: ${listAddresses} ">
+            <div class="col-sm-6 mt-2">
+                <div class="card" th:classappend="${address.defaultForShipping ? 'bg-warning' : ''}">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col">
+                                <b>Adres #[[${status.count + 1}]]</b>
+                                <th:block th:if="${address.defaultForShipping}">
+                                    <span class="text-danger">[Główny]</span>
+                                </th:block>
+
+                                <th:block th:unless="${address.defaultForShipping}">
+                                    <a th:href="@{'/address_book/default/' + ${address.id}}">[Ustaw jako główny]</a>
+                                </th:block>
+                            </div>
+
+                            <div class="col">
+                                <div class="float-right">
+                                    <a class="fas fa-edit icon-grey" title="Edytuj ten adres"
+                                       th:href="@{'/address_book/edit/' + ${address.id}}"></a>
+                                    &nbsp;
+                                    <a class="fas fa-trash icon-grey linkDelete" title="Usuń ten adres"
+                                       th:entityId="${address.id}"
+                                       th:href="@{'/address_book/delete/' + ${address.id}}"></a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        [[${address}]]
+                    </div>
+                </div>
+            </div>
+        </th:block>
+
+    </div>
+
+    <div>&nbsp;</div>
+    <div th:replace="fragments :: confirm_modal"></div>
+    <div th:replace="fragments :: footer"></div>
+
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(".linkDelete").on("click", function(event) {
+            event.preventDefault();
+            showDeleteConfirmModal($(this), 'addres');
+        });
+    });
+
+    function showDeleteConfirmModal(link, entityName) {
+        entityId = link.attr("entityId");
+
+        $("#yesButton").attr("href", link.attr("href"));
+        $("#confirmText").text("Chcesz usunąć  "
+            + entityName + " o ID " + entityId + "?");
+        $("#confirmModal").modal();
+    }
+
+</script>
+</body>
+</html>

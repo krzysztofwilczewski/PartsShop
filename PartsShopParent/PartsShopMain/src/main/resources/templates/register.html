@@ -15,7 +15,7 @@
     <h1>Rejestracja Użytkownika</h1>
   </div>
 
-  <form th:action="@{create_customer}" method="post" th:object="${customer}" style="max-width: 600px; margin: 0 auto"
+  <form th:action="@{/create_customer}" method="post" th:object="${customer}" style="max-width: 600px; margin: 0 auto"
         onsubmit="return checkEmailUnique(this);">
     <div class="border border-secondary rounded p-3">
 

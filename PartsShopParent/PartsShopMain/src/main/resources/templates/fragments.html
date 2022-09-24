@@ -99,7 +99,7 @@
             </li>
 
             <li class="nav-item">
-              <a class="nav-link" href="">Adresy</a>
+              <a class="nav-link" th:href="@{/address_book}">Adresy</a>
             </li>
 
             <li class="nav-item">
@@ -142,6 +142,26 @@
       </div>
       <div class="modal-footer"></div>
       <button type="button" class="btn btn-danger" data-dismiss="modal">ZAMKNIJ</button>
+    </div>
+  </div>
+</div>
+
+<div th:fragment="confirm_modal" class="modal fade text-center" id="confirmModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Potwierdzenie usunięcia</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <span id="confirmText"></span>
+      </div>
+
+      <div class="modal-footer">
+        <a class="btn btn-success" href="" id="yesButton">Tak</a>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Nie</button>
+      </div>
     </div>
   </div>
 </div>

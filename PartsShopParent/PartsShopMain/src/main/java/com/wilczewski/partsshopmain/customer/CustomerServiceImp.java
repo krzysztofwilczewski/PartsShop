@@ -18,17 +18,14 @@ import java.util.List;
 @Transactional
 public class CustomerServiceImp implements CustomerService{
 
+    @Autowired
     private CountryRepository countryRepository;
+    @Autowired
     private CustomerRepository customerRepository;
-
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    public CustomerServiceImp(CountryRepository countryRepository, CustomerRepository customerRepository, PasswordEncoder passwordEncoder) {
-        this.countryRepository = countryRepository;
-        this.customerRepository = customerRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
+
 
     @Override
     public List<Country> listAllCountries() {
