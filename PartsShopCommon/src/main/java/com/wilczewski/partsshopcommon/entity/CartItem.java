@@ -17,6 +17,7 @@ public class CartItem {
     private Product product;
     private int quantity;
 
+
     public CartItem() {
     }
 
@@ -51,6 +52,7 @@ public class CartItem {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
+
 
     @Override
     public String toString() {

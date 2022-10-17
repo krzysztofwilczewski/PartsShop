@@ -12,10 +12,11 @@
 
     <div class="text-center">
     <div>
-        <h2>TWOJA KSIĄŻKA ADRESOWA</h2>
+        <h2 th:text="${param.redirect != null && param.redirect[0] == 'checkout'} ? 'WYBIERZ NOWY ADRES WYSYŁKI' : 'TWOJA KSIĄŻKA ADRESOWA'"></h2>
     </div>
         <div>
-            <a th:href="@{/address_book/new}" class="h4">Dodaj nowy adres</a>
+            <a th:unless="${param.redirect}" th:href="@{/address_book/new}" class="h4">Dodaj nowy adres</a>
+            <a th:if="${param.redirect != null && param.redirect[0] == 'checkout'}" th:href="@{/address_book/new(redirect=checkout)}" class="h4">Dodaj nowy adres</a>
         </div>
     </div>
 
@@ -32,17 +33,21 @@
                             <b>Twój główny adres</b>
 
                             <th:block th:if="${usePrimaryAddressAsDefault}">
-                                <span class="text-danger">[Główny]</span>
+                                <span class="text-danger" th:text="${param.redirect != null && param.redirect[0] == 'checkout'} ? '[Aktualnie wybrany]' : '[Główny]'"></span>
                             </th:block>
 
                             <th:block th:unless="${usePrimaryAddressAsDefault}">
-                                <a th:href="@{'/address_book/default/0'}">[Ustaw jako główny]</a>
+                                <a th:unless="${param.redirect}" th:href="@{'/address_book/default/0'}">[Ustaw jako główny]</a>
+                                <a th:if="${param.redirect != null && param.redirect[0] == 'cart'}" th:href="@{'/address_book/default/0?redirect=cart'}">[Ustaw jako główny]</a>
+                                <a th:if="${param.redirect != null && param.redirect[0] == 'checkout'}" th:href="@{'/address_book/default/0?redirect=checkout'}">[Wybierz]</a>
                             </th:block>
 
                         </div>
                         <div class="col">
                             <div class="float-right">
-                                <a class="fas fa-edit icon-grey" title="Edytuj główny adres" th:href="@{/account_details(redirect=address_book)}"></a>
+                                <a th:unless="${param.redirect}" class="fas fa-edit icon-grey" title="Edytuj główny adres" th:href="@{/account_details(redirect=address_book)}"></a>
+
+                                <a th:if="${param.redirect != null && param.redirect[0] == 'checkout'}" class="fas fa-edit icon-grey" title="Edytuj główny adres" th:href="@{/account_details(redirect=checkout)}"></a>
                             </div>
                         </div>
                     </div>
@@ -61,18 +66,23 @@
                             <div class="col">
                                 <b>Adres #[[${status.count + 1}]]</b>
                                 <th:block th:if="${address.defaultForShipping}">
-                                    <span class="text-danger">[Główny]</span>
+                                    <span class="text-danger" th:text="${param.redirect != null && param.redirect[0] == 'checkout'} ? '[Aktualnie wybrany]' : '[Główny]'"></span>
                                 </th:block>
 
                                 <th:block th:unless="${address.defaultForShipping}">
-                                    <a th:href="@{'/address_book/default/' + ${address.id}}">[Ustaw jako główny]</a>
+                                    <a th:unless="${param.redirect}" th:href="@{'/address_book/default/' + ${address.id}}">[Ustaw jako główny]</a>
+                                    <a th:if="${param.redirect != null && param.redirect[0] == 'cart'}" th:href="@{'/address_book/default/' + ${address.id} + '?redirect=cart'}">[Ustaw jako główny]</a>
+                                    <a th:if="${param.redirect != null && param.redirect[0] == 'checkout'}" th:href="@{'/address_book/default/' + ${address.id} + '?redirect=checkout'}">[Wybierz]</a>
                                 </th:block>
                             </div>
 
                             <div class="col">
                                 <div class="float-right">
-                                    <a class="fas fa-edit icon-grey" title="Edytuj ten adres"
+                                    <a th:unless="${param.redirect}" class="fas fa-edit icon-grey" title="Edytuj ten adres"
                                        th:href="@{'/address_book/edit/' + ${address.id}}"></a>
+
+                                    <a th:if="${param.redirect != null && param.redirect[0] == 'checkout'}" class="fas fa-edit icon-grey" title="Edytuj ten adres"
+                                       th:href="@{'/address_book/edit/' + ${address.id} + '?redirect=checkout'}"></a>
                                     &nbsp;
                                     <a class="fas fa-trash icon-grey linkDelete" title="Usuń ten adres"
                                        th:entityId="${address.id}"

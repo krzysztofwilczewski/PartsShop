@@ -70,4 +70,9 @@ public class ShoppingCartServiceImp implements ShoppingCartService{
     public void removeProduct(Integer productId, Customer customer) {
         cartItemRepository.deleteByCustomerAndProduct(customer.getId(), productId);
     }
+
+    @Override
+    public void deleteByCustomer(Customer customer) {
+        cartItemRepository.deleteByCustomer(customer.getId());
+    }
 }

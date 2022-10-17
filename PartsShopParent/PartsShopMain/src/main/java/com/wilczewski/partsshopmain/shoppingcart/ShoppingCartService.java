@@ -15,4 +15,6 @@ public interface ShoppingCartService{
 
     public void removeProduct(Integer productId, Customer customer);
 
+    public void deleteByCustomer(Customer customer);
+
 }

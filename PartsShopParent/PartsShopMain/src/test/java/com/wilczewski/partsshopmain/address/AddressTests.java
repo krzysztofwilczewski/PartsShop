@@ -95,4 +95,12 @@ public class AddressTests {
         Integer customerId = 8;
         addressRepository.setNonDefaultForOthers(addressId, customerId);
     }
+
+    @Test
+    public void testGetDefault(){
+        Integer customerId = 8;
+        Address address = addressRepository.findDefaultByCustomer(customerId);
+        assertThat(address).isNotNull();
+        System.out.println(address);
+    }
 }

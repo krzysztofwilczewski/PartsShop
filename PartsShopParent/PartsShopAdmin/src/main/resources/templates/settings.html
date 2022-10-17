@@ -59,7 +59,7 @@
         <div th:replace="mail_templates :: content"></div>
       </div>
       <div class="tab-pane p-3" id="payments" role="tabpanel">
-        <h2>Płatności</h2>
+        <div th:replace="payments :: content"></div>
       </div>
     </div>
   </div>
@@ -81,6 +81,7 @@
 
   $(document).ready(function () {
     $("#customerVerificationContent").richText();
+    $("#orderConfirmationContent").richText();
   });
 
 </script>

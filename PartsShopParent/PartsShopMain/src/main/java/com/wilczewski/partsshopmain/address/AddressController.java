@@ -6,7 +6,6 @@ import com.wilczewski.partsshopcommon.entity.Customer;
 import com.wilczewski.partsshopmain.Utility;
 import com.wilczewski.partsshopmain.customer.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -76,9 +75,16 @@ public class AddressController {
         address.setCustomer(customer);
         addressService.save(address);
 
+        String redirectOption = request.getParameter("redirect");
+        String redirectURL = "redirect:/address_book";
+
+        if ("checkout".equals(redirectOption)){
+            redirectURL += "?redirect=checkout";
+        }
+
         redirectAttributes.addFlashAttribute("message", "Adres został zapisany");
 
-        return "redirect:/address_book";
+        return redirectURL;
 
     }
 
@@ -112,6 +118,15 @@ public class AddressController {
         Customer customer = getAuthenticatedCustomer(request);
         addressService.setDefaultAddress(addressId, customer.getId());
 
-        return "redirect:/address_book";
+        String redirectOption = request.getParameter("redirect");
+        String redirectURL = "redirect:/address_book";
+
+        if ("cart".equals(redirectOption)) {
+            redirectURL = "redirect:/cart";
+        } else if ("checkout".equals(redirectOption)){
+            redirectURL = "redirect:/checkout";
+        }
+
+        return redirectURL;
     }
 }

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head th:replace="fragments :: pagehead('Podsumowanie', 'none')"/>
+
+<body>
+
+<div class="container-fluid">
+    <div th:replace="fragments :: header"></div>
+    <div th:replace="fragments :: search"></div>
+
+    <div class="text-center">
+        <h2>TWOJE ZAKUPY</h2>
+    </div>
+
+    <div class="row m-1">
+        <div class="col-sm-8">
+            <div class="card">
+                <div class="card-header"><h5>Informacje o wysyłce</h5></div>
+                <div class="card-body">
+                    <p>
+                        <b>Adres wysyłki:</b>&nbsp;[[${shippingAddress}]]
+                        <a th:href="@{/address_book(redirect=checkout)}">[Zmień adres wysyłki]</a>
+                    </p>
+                    <p>
+                      <b>Czas dostawy: </b>[[${checkoutInfo.deliverDays}]] dni
+                    </p>
+                    <p>
+                        <b>Przewidywana data dostawy: </b>[[${#dates.format(checkoutInfo.deliverDate, 'E, dd MMM yyyy')}]]
+                    </p>
+                </div>
+            </div>
+
+            <div class="card mt-3 mb-3">
+                <div class="card-header"><h5>Metody płatności</h5></div>
+                <div class="card-body">
+                    <div>
+                    <form th:action="@{/place_order}" method="post">
+                        <p>
+                            <input type="radio" name="paymentMethod" id="radioCOD" value="COD" /> Płatność przy odbiorze
+                            &nbsp;
+                            <button class="btn btn-primary d-none" type="submit" id="buttonSubmit">Kup</button>
+                        </p>
+                    </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-sm-4">
+            <div class="card">
+                <div class="card-header"><h5>Podsumowanie zamówienia</h5></div>
+                <div class="card-body">
+                    <div>
+                        <table>
+                            <th:block th:each="item : ${cartItems}">
+                                <tr th:with="product = ${item.product}">
+                                    <td>[[${item.quantity}]] X &nbsp;&nbsp;</td>
+                                    <td width="70%"><a th:href="@{'/p/' + ${product.alias}}" target="_blank">[[${product.shortName}]]</a></td>
+                                    <td>
+                                        <div th:replace="fragments :: format_currency(${item.subtotal})"></div>
+                                    </td>
+                                </tr>
+                            </th:block>
+                            <tr>
+                                <td colspan="3"><hr/></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col">Suma zakupów: </div>
+                        <div><div th:replace="fragments :: format_currency(${checkoutInfo.productTotal})"></div></div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col">Koszt dostawy: </div>
+                        <div><div th:replace="fragments :: format_currency(${checkoutInfo.shippingCostTotal})"></div></div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col">Całkowity koszt: </div>
+                        <div><b><div th:replace="fragments :: format_currency(${checkoutInfo.paymentTotal})"></div></b></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div th:replace="fragments :: footer"></div>
+
+</div>
+<script type="text/javascript">
+    contextPath = "[[@{/}]]";
+    var csrfHeaderName = "[[${_csrf.headerName}]]"
+    var csrfValue = "[[${_csrf.token}]]";
+
+    $(document).ready(function () {
+        $("#radioCOD").on("click", function () {
+            $("#buttonSubmit").removeClass("d-none");
+        });
+    });
+
+</script>
+<script type="text/javascript" th:src="@{/js/jquery.number.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/shooping_cart.js}"></script>
+<script type="text/javascript" th:src="@{/js/common.js}"></script>
+
+</body>
+</html>

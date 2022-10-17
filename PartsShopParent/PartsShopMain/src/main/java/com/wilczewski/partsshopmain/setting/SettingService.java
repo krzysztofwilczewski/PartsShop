@@ -11,4 +11,6 @@ public interface SettingService {
 
     public EmailSettingBag getEmailSettings();
 
+    public CurrencySettingBag getCurrencySettings();
+
 }

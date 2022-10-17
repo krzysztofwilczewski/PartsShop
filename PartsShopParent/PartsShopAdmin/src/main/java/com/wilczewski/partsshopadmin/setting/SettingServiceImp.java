@@ -55,18 +55,13 @@ public class SettingServiceImp implements SettingService{
     public List<Setting> getMailTemplatesSettings() {
         return settingRepository.findByCategory(SettingCategory.MAIL_TEMPLATES);
     }
-/*
+
     public List<Setting> getCurrencySettings() {
         return settingRepository.findByCategory(SettingCategory.CURRENCY);
     }
 
     @Override
-    public EmailSettingBag getEmailSettings() {
-
-        List<Setting> settings = settingRepository.findByCategory(SettingCategory.MAIL_SERVER);
-        settings.addAll(settingRepository.findByCategory(SettingCategory.MAIL_TEMPLATES));
-
-        return new EmailSettingBag(settings);
-    } */
-
+    public List<Setting> getPaymentSettings() {
+        return settingRepository.findByCategory(SettingCategory.PAYMENT);
+    }
 }

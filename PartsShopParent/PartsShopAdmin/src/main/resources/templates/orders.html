@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: pagehead('ADMIN - LISTA ZAMÓWIEŃ', 'none')" />
+<body>
+
+<div class="container-fluid">
+  <div th:replace="fragments :: adminheader">
+
+  </div>
+  <div>
+    <h1>ZAMÓWIENIA</h1>
+  </div>
+  <div th:if="${message != null}" class="alert alert-success text-center">
+    [[${message}]]
+  </div>
+
+  <div th:replace="fragments :: search_module('/admin/orders/page/1')" />
+
+  <div>
+    <table class="table table-bordered table-striped table-hover table-responsive-xl">
+      <thead class="thead-dark">
+      <tr>
+        <th th:replace="fragments :: column_table('/orders', 'id', 'ID')"/>
+        <th th:replace="fragments :: column_table('/orders', 'customer', 'KLIENT')"/>
+        <th th:replace="fragments :: column_table('/orders', 'total', 'SUMA')"/>
+        <th th:replace="fragments :: column_table('/orders', 'orderTime', 'DATA ZŁOŻENIA')"/>
+        <th th:replace="fragments :: column_table('/orders', 'destination', 'DOKĄD')"/>
+        <th th:replace="fragments :: column_table('/orders', 'paymentMethod', 'METODA PŁATNOŚCI')"/>
+        <th th:replace="fragments :: column_table('/orders', 'status', 'STATUS')"/>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="order : ${listOrders}">
+        <td>[[${order.id}]]</td>
+        <td>
+          <a class="linkCustomerDetail" th:href="@{'/admin/customers/detail/' + ${order.customer.id}}">
+            [[${order.customer.fullName}]]
+          </a>
+        </td>
+        <td>
+          <div th:replace="fragments :: format_currency(${order.total})"></div>
+        </td>
+        <td>
+          <div th:replace="fragments :: format_time(${order.orderTime})"></div>
+        </td>
+        <td>[[${order.destination}]]</td>
+        <td>[[${order.paymentMethod}]]</td>
+        <td>[[${order.status}]]</td>
+
+        <td>
+          <a class="fas fa-file-alt fa-2x icon-green linkOrderDetail"
+             th:href="@{'/admin/orders/detail/' + ${order.id}}"
+             title="Szczegóły zamówienia"></a>
+          &nbsp;
+          <a class="fa-solid fa-pen-to-square fa-2x icon-green" th:href="@{'/admin/orders/edit/' + ${order.id}}"
+             title="Edycja zamówienia"></a>
+          &nbsp;
+          <a class="fa-solid fa-trash-can fa-2x icon-red link-delete"
+             th:href="@{'/admin/orders/delete/' + ${order.id}}" th:orderId="${order.id}"
+             title="Usuń zamówienie"></a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div th:replace="fragments :: pagination('/orders', 'Zamówienia')"/>
+
+  <div th:replace="fragments :: modal_delete" />
+
+  <div class="modal fade" id="detailModal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="orderDetailModal">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+      </div>
+    </div>
+  </div>
+
+</div>
+<script th:src="@{/js.common.js}"></script>
+<script type="text/javascript">
+  moduleURL = "[[@{/orders}]]";
+
+  $(document).ready(function () {
+
+    handleLinkViewCustomerDetails();
+    handleLinkViewOrderDetails();
+
+
+    $(".link-delete").on("click", function (e) {
+      e.preventDefault();
+      link = $(this);
+      //alert($(this).attr("href"));
+      orderId = link.attr("orderId");
+      $("#yesButton").attr("href", link.attr("href"));
+      $("#confirmText").text("NAPEWNO CHCESZ USUNĄĆ ZAMÓWIENIE ID " + orderId + " ?");
+      $("#confirmModal").modal();
+    });
+  });
+
+  function handleLinkViewCustomerDetails() {
+    $(".linkCustomerDetail").on("click", function(e) {
+      e.preventDefault();
+      linkDetailURL = $(this).attr("href");
+      $("#detailModal").modal("show").find(".modal-content").load(linkDetailURL);
+    });
+  }
+
+  function handleLinkViewOrderDetails() {
+    $(".linkOrderDetail").on("click", function (e) {
+      e.preventDefault();
+      linkDetailURL = $(this).attr("href");
+      $("#orderDetailModal").modal("show").find(".modal-content").load(linkDetailURL);
+    });
+  }
+
+  function clearFilter() {
+    window.location = "[[@{/admin/orders}]]";
+  }
+</script>
+</body>
+</html>

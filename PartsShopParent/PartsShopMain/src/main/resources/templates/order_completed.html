@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head th:replace="fragments :: pagehead('SKLEP', 'none')"/>
+
+<body>
+
+<div class="container-fluid">
+    <div th:replace="fragments :: header"></div>
+    <div th:replace="fragments :: search"></div>
+
+    <div class="text-center border border-secondary rounded m-3 p-3">
+        <h2>Zamówienie zostało złożone!</h2>
+        <h4>E-mail potwierdzający został wysłany.</h4>
+        <h4>Sprawdź skrzynkę pocztową.</h4>
+    </div>
+
+
+    <div th:replace="fragments :: footer">
+
+    </div>
+
+</div>
+</body>
+</html>
